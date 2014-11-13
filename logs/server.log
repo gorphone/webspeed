@@ -1,0 +1,31 @@
+Panda running at 1337
+GET /panda - /panda
+Error: Can't set headers after they are sent.
+    at ServerResponse.OutgoingMessage.setHeader (http.js:689:11)
+    at ServerResponse.header (/home/work/website/webspeed/node_modules/express/lib/response.js:666:10)
+    at ServerResponse.send (/home/work/website/webspeed/node_modules/express/lib/response.js:146:12)
+    at /home/work/website/webspeed/server.js:25:6
+    at Layer.handle [as handle_request] (/home/work/website/webspeed/node_modules/express/lib/router/layer.js:82:5)
+    at trim_prefix (/home/work/website/webspeed/node_modules/express/lib/router/index.js:270:13)
+    at /home/work/website/webspeed/node_modules/express/lib/router/index.js:237:9
+    at Function.proto.process_params (/home/work/website/webspeed/node_modules/express/lib/router/index.js:312:12)
+    at /home/work/website/webspeed/node_modules/express/lib/router/index.js:228:12
+    at Function.match_layer (/home/work/website/webspeed/node_modules/express/lib/router/index.js:295:3)
+GET /favicon.ico - /favicon.ico
+GET /panda - /panda
+Error: Can't set headers after they are sent.
+    at ServerResponse.OutgoingMessage.setHeader (http.js:689:11)
+    at ServerResponse.header (/home/work/website/webspeed/node_modules/express/lib/response.js:666:10)
+    at ServerResponse.res.contentType.res.type (/home/work/website/webspeed/node_modules/express/lib/response.js:532:15)
+    at ServerResponse.send (/home/work/website/webspeed/node_modules/express/lib/response.js:121:14)
+    at /home/work/website/webspeed/server.js:25:6
+    at Layer.handle [as handle_request] (/home/work/website/webspeed/node_modules/express/lib/router/layer.js:82:5)
+    at trim_prefix (/home/work/website/webspeed/node_modules/express/lib/router/index.js:270:13)
+    at /home/work/website/webspeed/node_modules/express/lib/router/index.js:237:9
+    at Function.proto.process_params (/home/work/website/webspeed/node_modules/express/lib/router/index.js:312:12)
+    at /home/work/website/webspeed/node_modules/express/lib/router/index.js:228:12
+GET /favicon.ico - /favicon.ico
+GET / - /
+GET /favicon.ico - /favicon.ico
+GET / - /
+GET /favicon.ico - /favicon.ico
