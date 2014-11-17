@@ -2,8 +2,11 @@
 	"name": "Panda",
 	"description": "PP-Webspeed",
 	"version": "0.0.1",
+	"main": "server.js",
 	"private": true,
 	"dependencies": {
-		"express": "4.10.1"
+		"express": "4.10.1", 
+		"mongoose": "3.8.19", 
+		"body-parser": "1.9.2" 
 	}
 }
