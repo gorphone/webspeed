@@ -1,3 +1,5 @@
+require 'fluent/plugin/out_mongo'
+
 module Fluent
   class MongoTimezoneOutput < MongoOutput
     Plugin.register_output('mongo_timezone', self)
