@@ -11,16 +11,10 @@
 var config = require('./conf/env.json');
 // Framework
 var express = require('express'); 
-console.log(express);exit();
-// Use morgan to console log
-// var morgan = require('morgan');
 // Use body-parser to pull POST content from HTTP request.
 var bodyParser = require('body-parser'); 
-// Use csurf for CSRF
-//var csrf = require('csurf');
 // Use Mongoose to connect MongoDB.
 var mongoose = require('mongoose');
-var csrf = require('csurf');
 
 // Define Panda using express
 var Panda = express(); 
