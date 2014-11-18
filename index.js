@@ -33,6 +33,14 @@ connect();
 mongoose.connection.on('error', console.log);
 mongoose.connection.on('disconnected', connect);
 
+/**
+ * BOOTSTRAP MODELS
+ * ==================================================
+ */
+fs.readdirSync(__dirname + config.path.model).forEach(function (file) {
+  if (~file.indexOf('.js')) require(__dirname + '/server/model/' + file);
+});
+
 // Configure Panda to use bodyParser()
 Panda.use(bodyParser.urlencoded({ extended: true }));
 Panda.use(bodyParser.json());
