@@ -1,2 +1,2 @@
 
-console.log('init list.js')''
+console.log('init list.js');
