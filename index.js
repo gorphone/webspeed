@@ -9,6 +9,7 @@
  * ==================================================
  */
 var config = require('./conf/env.json');
+var fs = require('fs');
 // Framework
 var express = require('express'); 
 // Use body-parser to pull POST content from HTTP request.
@@ -37,7 +38,7 @@ mongoose.connection.on('disconnected', connect);
  * BOOTSTRAP MODELS
  * ==================================================
  */
-fs.readdirSync(__dirname + config.path.model).forEach(function (file) {
+fs.readdirSync(__dirname + '/server/model').forEach(function (file) {
   if (~file.indexOf('.js')) require(__dirname + '/server/model/' + file);
 });
 
