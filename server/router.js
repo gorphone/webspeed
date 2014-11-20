@@ -31,6 +31,10 @@ router.get('/eat/:food', function(req, res) {
 	res.json({ message: 'eating ' + req.food});
 });
 
+
+router.post('/authentication', function(req, res) {
+
+});
 // More routes can add here
 
 
