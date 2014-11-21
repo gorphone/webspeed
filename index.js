@@ -49,6 +49,7 @@ fs.readdirSync(__dirname + '/server/model').forEach(function (file) {
 Panda.use(bodyParser.urlencoded({ extended: true }));
 Panda.use(bodyParser.json());
 
+Panda.use(express.static('./client'));
 /** 
  * REGISTER ROUTES
  * Set all of routes will be prefixed with /api
@@ -56,7 +57,8 @@ Panda.use(bodyParser.json());
  */
 var router = require('./server/router.js');
 
-Panda.use('/api', router);
+Panda.use('', router);
+
 
 
 /**

@@ -5,6 +5,7 @@
 
 
 var express = require('express');
+var list = require('./actions/list.js');
 
 var router = express.Router();
 
@@ -24,9 +25,7 @@ router.param('food', function(req, res, next, food) {
 });
 
 // Root route
-router.get('/', function(req, res) {
-	res.json({ message: 'Miao~, welcome to Panda!'});
-});
+router.get('/', list.index);
 router.get('/eat/:food', function(req, res) {
 	res.json({ message: 'eating ' + req.food});
 });
