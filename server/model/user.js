@@ -4,7 +4,7 @@
  */
 var mongoose = require('mongoose');
 var crypto = require('crypto');
-var config = require('../../conf/env.json');
+var config = require('./../../conf/env.json');
 
 var Schema = mongoose.Schema;
 
@@ -88,4 +88,4 @@ UserSchema.statics = {
 }
 
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('user', UserSchema);

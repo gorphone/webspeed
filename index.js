@@ -50,16 +50,19 @@ Panda.use(bodyParser.urlencoded({ extended: true }));
 Panda.use(bodyParser.json());
 
 Panda.use(express.static('./client'));
+
+
+
+
 /** 
  * REGISTER ROUTES
  * =======================================================
  */
-var routerSite = require('./server/router/site.js');
-var routerApi = require('./server/router/api.js');
+var routerSite = require('./server/router/site');
+var routerApi = require('./server/router/api');
 
 Panda.use('/', routerSite);
 Panda.use('/api', routerApi);
-
 
 
 /**
@@ -69,3 +72,4 @@ Panda.use('/api', routerApi);
 var server = Panda.listen(port, function() {
 	console.log('Panda running at %s', server.address().port);
 });	
+

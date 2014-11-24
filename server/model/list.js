@@ -68,9 +68,9 @@ var Model = mongoose.model('web00', LogSchema);
 module.exports = Model;
 
 Model.mapOs (function(err, logs){
-	console.log(err);
+	//console.log(err);
 	if(!err){
-		console.log(logs);
+		//console.log(logs);
 	}
 });
 
