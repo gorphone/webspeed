@@ -52,12 +52,13 @@ Panda.use(bodyParser.json());
 Panda.use(express.static('./client'));
 /** 
  * REGISTER ROUTES
- * Set all of routes will be prefixed with /api
  * =======================================================
  */
-var router = require('./server/router.js');
+var routerSite = require('./server/router/site.js');
+var routerApi = require('./server/router/api.js');
 
-Panda.use('', router);
+Panda.use('/', routerSite);
+Panda.use('/api', routerApi);
 
 
 

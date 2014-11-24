@@ -1,11 +1,10 @@
 /** 
- * ROUTES FOR PANDA
+ * ROUTES FOR PANDA API
  * Created on 2014-11-18 by GaoJinghua(gaojinhwa@gmail.com)
  */
 
 
 var express = require('express');
-var list = require('./actions/list.js');
 
 var router = express.Router();
 
@@ -25,8 +24,7 @@ router.param('food', function(req, res, next, food) {
 });
 
 // Root route
-router.get('/', list.index);
-router.get('/api/eat/:food', function(req, res) {
+router.get('/eat/:food', function(req, res) {
 	res.json({ message: 'eating ' + req.food});
 });
 
