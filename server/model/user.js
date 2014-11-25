@@ -10,10 +10,10 @@ var Schema = mongoose.Schema;
 
 
 /**
- * UserSchema
+ * userSchema
  * @type {Schema}
  */
-var UserSchema = new Schema({
+var userSchema = new Schema({
 	username: { type: String, default: ''},
 	hashed_password: { type: String, default: ''},
 	group: { type: String, default: ''}
@@ -22,7 +22,7 @@ var UserSchema = new Schema({
 /**
  * Virtual property 
  */
-UserSchema.virtual('password')
+userSchema.virtual('password')
 	.set(function(password) {
 		this._password = password;
 		this.salt = config.salt;
@@ -35,7 +35,7 @@ UserSchema.virtual('password')
 /**
  * Entity methods
  */
-UserSchema.methods = {
+userSchema.methods = {
 	/**
 	 * Authenticate: check if the passwords are the same
 	 * 
@@ -70,22 +70,9 @@ UserSchema.methods = {
  * Model methods
  */
 
-UserSchema.statics = {
-   /**
-   * Load
-   *
-   * @param {Object} options
-   * @param {Function} cb
-   * @api private
-   */
-
-  load: function (options, cb) {
-    options.select = options.select || 'name username';
-    this.findOne(options.criteria)
-      .select(options.select)
-      .exec(cb);
-  }
+userSchema.statics = {
+	
 }
 
 
-module.exports = mongoose.model('user', UserSchema);
+module.exports = mongoose.model('User', userSchema);

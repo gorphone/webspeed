@@ -18,6 +18,8 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 // Use JWTs to authentication which base on token
 var jwToken = require('jwt-simple');
+// Error handler
+var mwError = require('./server/middleware/error-handler');
 // Define Panda using express
 var Panda = express(); 
 // Set prot
@@ -52,8 +54,6 @@ Panda.use(bodyParser.json());
 Panda.use(express.static('./client'));
 
 
-
-
 /** 
  * REGISTER ROUTES
  * =======================================================
@@ -62,7 +62,7 @@ var routerSite = require('./server/router/site');
 var routerApi = require('./server/router/api');
 
 Panda.use('/', routerSite);
-Panda.use('/api', routerApi);
+Panda.use('/api', routerApi, mwError.handle);
 
 
 /**
