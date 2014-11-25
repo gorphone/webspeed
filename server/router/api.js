@@ -1,0 +1,44 @@
+/** 
+ * ROUTES FOR PANDA API
+ * Created on 2014-11-18 by GaoJinghua(gaojinhwa@gmail.com)
+ */
+
+
+var express = require('express');
+var mwAuth = require('./../middleware/authorization');
+var user = require('./../actions/api/user');
+
+var router = express.Router();
+
+//router.use(bodyParser());
+
+// Route middleware that will happedn on every request.
+// The order of middleware and routes is very important.
+router.param('food', function(req, res, next, food) {
+	
+	// output log
+	//console.log(req.ips, req.method, req.baseUrl+req.url, "want: "+food);
+	if(food !== 'xiang'){
+		food = 'nothing';
+	}
+	req.food = food;
+
+	// continue
+	next();
+});
+
+router.get('/out', mwAuth.requiresLogin, function(req, res) {
+	res.json({ message: 'happy'});
+});
+
+// Root route
+router.post('/eat', function(req, res) {
+	res.json({ message: 'eating ' + JSON.stringify(req.body)});
+});
+
+
+router.post('/authentication', user.authentication);
+// More routes can add here
+
+
+module.exports = router;

@@ -26,7 +26,7 @@ router.param('food', function(req, res, next, food) {
 
 // Root route
 router.get('/', list.index);
-router.get('/eat/:food', function(req, res) {
+router.get('/api/eat/:food', function(req, res) {
 	res.json({ message: 'eating ' + req.food});
 });
 
