@@ -6,6 +6,7 @@
 
 var express = require('express');
 var mwAuth = require('./../middleware/authorization');
+var mwVerify = require('./../middleware/verification');
 var user = require('./../actions/api/user');
 
 var router = express.Router();
@@ -14,18 +15,6 @@ var router = express.Router();
 
 // Route middleware that will happedn on every request.
 // The order of middleware and routes is very important.
-router.param('food', function(req, res, next, food) {
-	
-	// output log
-	//console.log(req.ips, req.method, req.baseUrl+req.url, "want: "+food);
-	if(food !== 'xiang'){
-		food = 'nothing';
-	}
-	req.food = food;
-
-	// continue
-	next();
-});
 
 router.get('/out', mwAuth.requiresLogin, function(req, res) {
 	res.json({ message: 'happy'});
@@ -36,6 +25,8 @@ router.post('/eat', function(req, res) {
 	res.json({ message: 'eating ' + JSON.stringify(req.body)});
 });
 
+
+router.post('/user/signup', [mwVerify.verify], user.signup);
 
 router.post('/authentication', user.authentication);
 // More routes can add here
