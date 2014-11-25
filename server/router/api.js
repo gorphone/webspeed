@@ -16,12 +16,12 @@ var router = express.Router();
 // Route middleware that will happedn on every request.
 // The order of middleware and routes is very important.
 
-router.get('/out', mwAuth.requiresLogin, function(req, res) {
+router.get('/out', mwAuth.requiresLogin, function (req, res) {
 	res.json({ message: 'happy'});
 });
 
 // Root route
-router.post('/eat', function(req, res) {
+router.post('/eat', function (req, res) {
 	res.json({ message: 'eating ' + JSON.stringify(req.body)});
 });
 

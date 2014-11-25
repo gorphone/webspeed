@@ -16,8 +16,6 @@ var express = require('express');
 var bodyParser = require('body-parser'); 
 // Use Mongoose to connect MongoDB.
 var mongoose = require('mongoose');
-// Use JWTs to authentication which base on token
-var jwToken = require('jwt-simple');
 // Error handler
 var mwError = require('./server/middleware/error-handler');
 // Define Panda using express

@@ -2,27 +2,26 @@
  * 输入验证
  */
 
-var utils = require('./../lib/untils');
+var utils = require('./../lib/utils');
 var mwError = require('./error-handler');
 
 var inner = {
-	verifyPost: function(req, res, next) {
+	verifyPost: function (req, res, next) {
 		var data = req.body;
 		if(utils.isEmpty(data)){
-			var err = mwError.errors('参数为空');
-			next(err);
+			next(new Error('参数为空'));
 		}else{
 			next();
 		}
 	},
-	verifyGet: function(req, res, next) {
-
+	verifyGet: function (req, res, next) {
+		//TBD
 	}
 }
 
 var outer = {
 	
-	verify: function(req, res, next) {
+	verify: function (req, res, next) {
 		var method  = req.method.toUpperCase();
 		//console.log(req);
 		switch (method) {

@@ -22,7 +22,13 @@ exports.errors = function (error_msg) {
  * @return {[type]}        [description]
  * @api public
  */
-exports.handle = function(err, req, res, next) {
+exports.handle = function (err, req, res, next) {
 	//console.log('panda'+JSON.stringify(err));
-	res.json({'xxx':JSON.stringify(err)});
+	if (err) {
+		res.json({'message':JSON.stringify(err)});
+		res.send(401);
+		return;
+	} else {
+		next();
+	}
 };

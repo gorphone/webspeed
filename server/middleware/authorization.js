@@ -3,7 +3,7 @@
  */
 
 var inner = {
-	requiresLogin: function(req, res, next) {
+	requiresLogin: function (req, res, next) {
 		
 		next();
 	}
