@@ -33,6 +33,3 @@ exports.isEmpty = function (obj) {
     return true;
 };
 
-exports.addDaysToCurrentTime = function (days) {
-    return new Date().getTime() + parseInt(days, 10)*24*60*60*1000;
-}

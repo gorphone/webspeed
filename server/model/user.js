@@ -21,7 +21,6 @@ var userSchema = new mongoose.Schema({
 userSchema.virtual('password')
 	.set(function (password) {
 		this._password = password;
-		this.salt = config.salt;
 		this.hashed_password = this.encryptPassword(password);
 	})
 	.get(function () {
@@ -92,7 +91,7 @@ userSchema.methods = {
 		if (!password) return '';
 		try {
 			return crypto
-				.createHmac('sha1', this.salt)
+				.createHmac('sha1', config.salt)
 				.update(password)
 				.digest('hex');
 		} catch (err) {

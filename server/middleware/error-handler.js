@@ -25,8 +25,8 @@ exports.errors = function (error_msg) {
 exports.handle = function (err, req, res, next) {
 	//console.log('panda'+JSON.stringify(err));
 	if (err) {
-		res.json({'message':JSON.stringify(err)});
-		res.send(401);
+		res.json({'message': err});
+		//res.send(401);
 		return;
 	} else {
 		next();
