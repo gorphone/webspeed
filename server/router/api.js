@@ -19,19 +19,10 @@ router.get('/os', list.os);
 // Route middleware that will happedn on every request.
 // The order of middleware and routes is very important.
 
-router.get('/out', mwAuth.requiresLogin, function(req, res) {
-	res.json({ message: 'happy'});
-});
-
-// Root route
-router.post('/eat', function(req, res) {
-	res.json({ message: 'eating ' + JSON.stringify(req.body)});
-});
-
-
+router.post('/user/login', [mwVerify.verify], user.login);
 router.post('/user/signup', [mwVerify.verify], user.signup);
 
-router.post('/authentication', user.authentication);
+router.post('/user/logout', [mwAuth.verify], user.logout);
 // More routes can add here
 
 
