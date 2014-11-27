@@ -8,9 +8,9 @@ var token = require('./../lib/token');
 var outer = {
 
 	verify: function (req, res, next) {
-		var access_token = (req.body && req.body.access_token) 
+		var access_token = req.headers['x-access-token']
 			|| (req.query && req.query.access_token) 
-			|| req.headers['x-access-token']
+			|| (req.body && req.body.access_token)
 			|| (req.cookie && req.cookie.access_token);
 
 		if (utils.isEmpty(access_token)) {
