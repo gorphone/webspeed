@@ -28,15 +28,26 @@ app.controller('mainController', function($scope, $http) {
 
     $('.preloader').hide();
 
-    $http.get('/api').
+    $http.get('/api/os').
         success(function(data, status, headers, config) {
-            // this callback will be called asynchronously
-            // when the response is available
+            var series = {
+                type: 'pie',
+                name: 'Browser share',
+                data: [
+                ]
+            };
+            angular.forEach(data, function( item ){
+                series.data.push([item._id, item.value.count])
+            });
+
+            $scope.chartConfig.series.push(series);
+            $scope.chartConfig.loading = false;
         }).
         error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
-    });
+        }
+    );
 
 
     $scope.chartConfig = {
@@ -46,7 +57,7 @@ app.controller('mainController', function($scope, $http) {
             plotShadow: false
         },
         title: {
-            text: 'Browser market shares at a specific website, 2010'
+            text: '各操作系统访问占比'
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -63,23 +74,7 @@ app.controller('mainController', function($scope, $http) {
                 }
             }
         },
-        series: [{
-            type: 'pie',
-            name: 'Browser share',
-            data: [
-                ['Firefox',   45.0],
-                ['IE',       26.8],
-                {
-                    name: 'Chrome',
-                    y: 12.8,
-                    sliced: true,
-                    selected: true
-                },
-                ['Safari',    8.5],
-                ['Opera',     6.2],
-                ['Others',   0.7]
-            ]
-        }],
+        series: [],
 
         loading: true
     };

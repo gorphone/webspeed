@@ -20,7 +20,6 @@ var mongoose = require('mongoose'),
 
 
 
-
 LogSchema.statics = {
 	findOs : function  ( os , callback ) {
 		this.find({user_agent: new RegExp(os,'i')}, callback);
@@ -32,19 +31,33 @@ LogSchema.statics = {
 
 	mapOs : function ( callback ){
 		var map = function (){
-				var match =  this.user_agent.match(/(Mac|Android|iPhone|iPod|Windows)/),
-					key = match ? match[0] : 'other',
-					value = {
-						count : 1
+				var	key = 'other',value = {
+						count : 1,
+						ua : this.user_agent
+					},
+					os = ['Apache','Ucmobile','Mozilla','iCarsclub','Python','Java','Mac','Linux','iTouch','iPod','iPhone', 'Android', 'Window'];
+
+				for (var i = os.length - 1; i >= 0; i--) {
+					if( this.user_agent.indexOf(os[i]) > -1){
+						key = os[i];
+						break;
 					}
+				};
+				if(this.user_agent == '-'){
+					key = 'no_ua';
+					value.count = 0;
+				}
+				
 				emit( key, value );
 			},
+
 			reduce = function( key, values){
 				var obj = {
 					count : 0
 				}
 				values.forEach(function(value){
 					obj.count += value.count ;
+					value.ua && (obj.ua = value.ua);
 				});
 				return obj;
 			};

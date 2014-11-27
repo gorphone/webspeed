@@ -12,7 +12,7 @@ var list = require('./../actions/api/list');
 
 var router = express.Router();
 
-router.get('/browser', list.os);
+router.get('/os', list.os);
 
 //router.use(bodyParser());
 

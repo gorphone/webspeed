@@ -5,11 +5,10 @@ module.exports = {
 		List.mapOs (function(err, logs){
 			//console.log(err);
 			if(!err){
-				res.json(res);
+				res.json(logs);
 			}else{
-				next(err);
+				console.log(err);
 			}
 		});
-		//res.json({ message: JSON.stringify(req.body)});
 	},
 }

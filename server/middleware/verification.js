@@ -2,7 +2,7 @@
  * 输入验证
  */
 
-var utils = require('./../lib/untils');
+var utils = require('./../lib/utils');
 var mwError = require('./error-handler');
 
 var inner = {
