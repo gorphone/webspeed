@@ -6,41 +6,86 @@
 
 var mongoose = require('mongoose'),
 	schedule = require('node-schedule'),
-	Logs = require('../model/list.js');
+	Logs = require('../model/list.js'),
+	envModel = require('../model/env.js');
 
-var Schema = mongoose.Schema,
-	envSchema = new mongoose.Schema({
-	    'date' : Date,
-	    'os' : String
-	});
+// Connect to mongodb
+var config = require('../../conf/env.json');
+var connect = function () {
+  var options = { server: { socketOptions: { keepAlive: 1 } } };
+  mongoose.connect(config.db, options);
+};
+connect();
+mongoose.connection.on('error', console.log);
+mongoose.connection.on('disconnected', connect);
 
-var envModel = mongoose.model('env', envSchema),
-	env = new envModel({
+
+
+var env = new envModel({
 		date : new Date,
-		os : 'test'
 	});
 
-// envModel.insert({
-// 		date : new Date,
-// 		os : [{
-// 			name:'test',
-// 			version:'test',
-// 			platform:'test',
-// 			count:1
-// 		}],
-// 		browser : [{
-// 			name:'test',
-// 			version:'test',
-// 			platform:'test',
-// 			count:1
-// 		}],
-// 	});
-// console.log(env.id);
 
-// // var rule = new schedule.RecurrenceRule();
-// // rule.second = 0; //每天12点跑一次脚本
+console.log(env.id);
 
-// console.log(env);
+// var rule = new schedule.RecurrenceRule();
+// rule.second = 0; //每天12点跑一次脚本
+
+function schemaValue(log){
+	var browser = [],
+		os = [];
+	for (var i in log.value.browser) {
+		var version = [],
+			b = log.value.browser[i];
+		for(var j in b.version ){
+			version.push({
+				version: j,
+				count: b.version[j].count
+			});
+		}
+		browser.push({
+			name: i,
+			count: b.count,
+			version: version
+		});
+	};
+	for (var i in log.value.os) {
+		var version = [],
+			b = log.value.os[i];
+		for(var j in b.version ){
+			version.push({
+				version: j,
+				count: b.version[j].count
+			});
+		}
+		os.push({
+			name: i,
+			count: b.count,
+			version: version
+		});
+	};
+
+	return {
+		os: os,
+		browser: browser
+	}
+}
+
+Logs.mapUserAgent(function(err, logs){
+	if(!err){
+		logs.forEach(function (log) {
+			var v = schemaValue(log);
+			console.log(log);
+			env[log._id] ={
+				os: v.os,
+				browser : v.browser,
+				count : log.value.count
+			}; 
+		});
+
+		env.save();
+	}
+});
 
 env.save(function(err){
 	console.log(err);

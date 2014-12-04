@@ -10,7 +10,8 @@ var pieTpl = {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
-            plotShadow: false
+            plotShadow: false,
+            type:'pie'
         },
         tooltip: {
             pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
@@ -144,47 +145,89 @@ app.controller('platformController', function($scope, $location, envDataProvider
         if(!envData){
             return false;
         }
-        var osSeries = {
-            type: 'pie',
-            name: 'osSeries',
-            data: [],
-            point: {
-                events:{
-                    click: function (event) {
-                        //console.log(this);
-                        // var platform = this.name == '移动端' ? 'mo' : 'pc';
-                        // $location.path('/platform/'+platform);
-                        // $scope.$apply();
+        var colors = Highcharts.getOptions().colors,
+            osSeries = [{
+                name: 'Os',
+                data: [],
+                size: '60%',
+                dataLabels: {
+                    formatter: function () {
+                        return this.y > 5 ? this.point.name : null;
+                    },
+                    color: 'white',
+                    distance: -30
+                }
+            },{
+                name: 'Versions',
+                data: [],
+                size: '80%',
+                innerSize: '60%',
+                dataLabels: {
+                    formatter: function () {
+                        // display only if larger than 1
+                        return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%'  : null;
                     }
                 }
-            }
-        },browserSeries = {
-            type: 'pie',
-            name: 'browserSeries',
-            data: [],
-            point: {
-                events:{
-                    click: function (event) {
-                        //console.log(this);
-                        // var platform = this.name == '移动端' ? 'mo' : 'pc';
-                        // $location.path('/platform/'+platform);
-                        // $scope.$apply();
+            }],
+            browserSeries = [{
+                name: 'Browser',
+                data: [],
+                size: '60%',
+                dataLabels: {
+                    formatter: function () {
+                        return this.point.name ;
+                    },
+                    color: 'white',
+                    distance: -30
+                }
+            },{
+                name: 'Versions',
+                data: [],
+                size: '80%',
+                innerSize: '60%',
+                dataLabels: {
+                    formatter: function () {
+                        // display only if larger than 1
+                        return '<b>' + this.point.name + ':</b> ' + this.y + '%' ;
                     }
                 }
-            }
-        };
+            }];
 
         $.each(envData[plat]['os'], function(index, val) {
-            osSeries.data.push([val.name,val.count])
+            osSeries[0].data.push({
+                name: val.name,
+                y: val.count,
+                color: colors[index]
+            });
+
+            $.each(val.version,function(i, el) {
+                osSeries[1].data.push({
+                    name: el.version,
+                    y: el.count,
+                    color: colors[i]
+                });
+            });
         });
         $.each(envData[plat]['browser'], function(index, val) {
-            browserSeries.data.push([val.name,val.count])
+            browserSeries[0].data.push({
+                name: val.name,
+                y: val.count,
+                color: colors[index]
+            });
+
+            $.each(val.version, function(i, el) {
+                browserSeries[1].data.push({
+                    name: el.version,
+                    y: el.count,
+                    color: colors[i]
+                });
+            });
         });
 
-        $scope.osChartConfig.series[0] = osSeries;
+        $scope.osChartConfig.series = osSeries;
         $scope.osChartConfig.loading = false;
 
-        $scope.browserChartConfig.series[0] = browserSeries;
+        $scope.browserChartConfig.series = browserSeries;
         $scope.browserChartConfig.loading = false;
         
     }

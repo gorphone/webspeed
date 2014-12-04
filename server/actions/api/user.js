@@ -65,9 +65,6 @@ module.exports = {
 			res.json(access_token);
 		});
 	},
-<<<<<<< HEAD
-	logout: function(req, res) {
-=======
 
 	/**
 	 * [logout description]
@@ -78,6 +75,5 @@ module.exports = {
 	logout: function (req, res) {
 		res.clearCookie('access_token');
 		res.json({"message": ""});
->>>>>>> a3bd6d2d077230dccb47c159eaeb0b391cbaae32
 	}
 }

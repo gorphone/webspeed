@@ -4,9 +4,7 @@
 			<i class="fa fa-bars"></i>
 		</a>
 		<ol class="breadcrumb pull-left">
-			<li><a href="">操作系统及浏览器</a></li>
-			<li><a href="#">操作系统</a></li>
-			<li><a href="#">浏览器</a></li>
+			<li><a href="">{{title}}</a></li>
 		</ol>
 		<!-- <div id="social" class="pull-right">
 			<a href="#"><i class="fa fa-google-plus"></i></a>
@@ -17,15 +15,15 @@
 		</div> -->
 	</div>
 </div>
-<div class="row">
+<div class="row" ng-controller="envController">
 	<div class="col-xs-12">
 		<div class="box">
 			<div class="box-header">
 				<div class="box-name">
 					<i class="fa fa-search"></i>
-					<span>浏览器分布</span>
+					<span>{{title}}</span>
 				</div>
-				<div class="box-icons">
+				<!-- <div class="box-icons">
 					<a class="collapse-link">
 						<i class="fa fa-chevron-up"></i>
 					</a>
@@ -35,7 +33,7 @@
 					<a class="close-link">
 						<i class="fa fa-times"></i>
 					</a>
-				</div>
+				</div> -->
 			</div>
 			<div class="box-content">
 				<highchart config="chartConfig"></highchart>	

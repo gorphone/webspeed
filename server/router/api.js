@@ -12,7 +12,7 @@ var list = require('./../actions/api/list');
 
 var router = express.Router();
 
-router.get('/os', list.os);
+router.get('/env', list.env);
 
 //router.use(bodyParser());
 
