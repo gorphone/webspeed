@@ -40,7 +40,7 @@ LogSchema.statics = {
 						count : 1
 					},
 					user_agent = this.user_agent,
-					browser = ['MSIE','Chrome','Firefox','UCWEB','UCBrowser', 'Opera','Maxthon','TencentTraveler','360SE', "MQQBrowser", "MicroMessenger",'Safari', ],
+					browser = ['MSIE','Chrome','Firefox','UCWEB','UCBrowser', 'Opera','Maxthon','TencentTraveler','360SE', "MQQBrowser", "MicroMessenger",'Safari'],
 					mo = ["Android", "iPhone OS", "iPod", "iPad", "Windows Phone","SymbianOS","BlackBerry",'Ucmobile'],
 					pc = ["Windows NT", "Mac", "Linux","X11", "Java"];
 

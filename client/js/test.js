@@ -41,16 +41,18 @@ app.config(function($routeProvider) {
     $routeProvider
         // route for the home page
         .when('/', {
-            templateUrl : 'html/home.html'//,
-            //controller  : 'envController'
+            templateUrl : 'html/env.html'//,
         })
 
-        // route for the about page
+        // route for the plat page
         .when('/platform/:plat', {
-            templateUrl : 'html/plat_mo.html'//,
+            templateUrl : 'html/platform.html'//,
             //controller  : 'platformController'
         })
-
+        .when('/version/:plat/:os_browser/:name', {
+            templateUrl : 'html/version.html'//,
+            //controller  : 'platformController'
+        })
         // // route for the contact page
         // .when('/contact', {
         //     templateUrl : 'pages/contact.html',
@@ -76,7 +78,7 @@ app.controller('envController', function($scope, $location, envDataProvider) {
     $('.preloader').hide();
     $scope.chartConfig = angular.copy($.extend({}, pieTpl, {
         title:{
-            text: 'pp 租车移动和pc流量占比'
+            text: 'pp租车移动和pc流量占比'
         }
     }));
 
@@ -125,6 +127,7 @@ app.controller('platformController', function($scope, $location, envDataProvider
     $scope.osTitle = '操作系统分布';
     $scope.browserTitle = '浏览器分布';
 
+    $scope.plat = plat;
     $scope.platform = plat == 'mo' ? '移动端' :'PC端';
     $('.preloader').hide();
 
@@ -151,10 +154,8 @@ app.controller('platformController', function($scope, $location, envDataProvider
             point: {
                 events:{
                     click: function (event) {
-                        //console.log(this);
-                        // var platform = this.name == '移动端' ? 'mo' : 'pc';
-                        // $location.path('/platform/'+platform);
-                        // $scope.$apply();
+                        $location.path('/version/'+ plat + '/os/' + this.name );
+                        $scope.$apply();
                     }
                 }
             }
@@ -165,10 +166,8 @@ app.controller('platformController', function($scope, $location, envDataProvider
             point: {
                 events:{
                     click: function (event) {
-                        //console.log(this);
-                        // var platform = this.name == '移动端' ? 'mo' : 'pc';
-                        // $location.path('/platform/'+platform);
-                        // $scope.$apply();
+                        $location.path('/version/'+ plat + '/browser/' + this.name );
+                        $scope.$apply();
                     }
                 }
             }
@@ -186,6 +185,60 @@ app.controller('platformController', function($scope, $location, envDataProvider
 
         $scope.browserChartConfig.series[0] = browserSeries;
         $scope.browserChartConfig.loading = false;
+        
+    }
+
+    envDataProvider.success(function(data){
+        setSeries( data );
+    });
+  
+});
+
+app.controller('versionController', function($scope, $location, envDataProvider,$routeParams) {
+    // create a message to display in our view
+    var plat = $routeParams['plat'],
+        os_browser = $routeParams['os_browser'],
+        name = $routeParams['name'];
+
+    $scope.title = '版本分布';
+
+    $scope.plat = plat;
+    $scope.os_browser = os_browser;
+    $scope.name = name;
+
+    $scope.platform = plat == 'mo' ? '移动端' :'PC端';
+    $scope.os_or_browser = os_browser == 'os' ? '操作系统' : '浏览器';
+
+    $('.preloader').hide();
+
+    $scope.chartConfig = angular.copy($.extend({}, pieTpl,{
+        title:{
+            text: 'ppzuche '+ $scope.platform + $scope.os_or_browser + name + '各版本占比'
+        }
+    }));
+
+    function setSeries ( envData ) {
+        if(!envData){
+            return false;
+        }
+        var series = {
+            type: 'pie',
+            name: 'version',
+            data: []
+        };
+
+        $.each(envData[plat][os_browser], function(index, val) {
+            if(val.name == name){
+                $.each(val.version, function(i, el) {
+                    series.data.push([el.version,el.count])
+                });
+                return false;
+            }
+        });
+        
+
+        $scope.chartConfig.series[0] = series;
+        $scope.chartConfig.loading = false;
         
     }
 
