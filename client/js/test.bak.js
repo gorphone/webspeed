@@ -10,7 +10,8 @@ var pieTpl = {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,
-            plotShadow: false
+            plotShadow: false,
+            type:'pie'
         },
         tooltip: {
             pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
@@ -41,18 +42,16 @@ app.config(function($routeProvider) {
     $routeProvider
         // route for the home page
         .when('/', {
-            templateUrl : 'html/env.html'//,
+            templateUrl : 'html/home.html'//,
+            //controller  : 'envController'
         })
 
-        // route for the plat page
+        // route for the about page
         .when('/platform/:plat', {
-            templateUrl : 'html/platform.html'//,
+            templateUrl : 'html/plat_mo.html'//,
             //controller  : 'platformController'
         })
-        .when('/version/:plat/:os_browser/:name', {
-            templateUrl : 'html/version.html'//,
-            //controller  : 'platformController'
-        })
+
         // // route for the contact page
         // .when('/contact', {
         //     templateUrl : 'pages/contact.html',
@@ -78,7 +77,7 @@ app.controller('envController', function($scope, $location, envDataProvider) {
     $('.preloader').hide();
     $scope.chartConfig = angular.copy($.extend({}, pieTpl, {
         title:{
-            text: 'pp租车移动和pc流量占比'
+            text: 'pp 租车移动和pc流量占比'
         }
     }));
 
@@ -127,7 +126,6 @@ app.controller('platformController', function($scope, $location, envDataProvider
     $scope.osTitle = '操作系统分布';
     $scope.browserTitle = '浏览器分布';
 
-    $scope.plat = plat;
     $scope.platform = plat == 'mo' ? '移动端' :'PC端';
     $('.preloader').hide();
 
@@ -147,98 +145,90 @@ app.controller('platformController', function($scope, $location, envDataProvider
         if(!envData){
             return false;
         }
-        var osSeries = {
-            type: 'pie',
-            name: 'osSeries',
-            data: [],
-            point: {
-                events:{
-                    click: function (event) {
-                        $location.path('/version/'+ plat + '/os/' + this.name );
-                        $scope.$apply();
+        var colors = Highcharts.getOptions().colors,
+            osSeries = [{
+                name: 'Os',
+                data: [],
+                size: '60%',
+                dataLabels: {
+                    formatter: function () {
+                        return this.y > 5 ? this.point.name : null;
+                    },
+                    color: 'white',
+                    distance: -30
+                }
+            },{
+                name: 'Versions',
+                data: [],
+                size: '80%',
+                innerSize: '60%',
+                dataLabels: {
+                    formatter: function () {
+                        // display only if larger than 1
+                        return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%'  : null;
                     }
                 }
-            }
-        },browserSeries = {
-            type: 'pie',
-            name: 'browserSeries',
-            data: [],
-            point: {
-                events:{
-                    click: function (event) {
-                        $location.path('/version/'+ plat + '/browser/' + this.name );
-                        $scope.$apply();
+            }],
+            browserSeries = [{
+                name: 'Browser',
+                data: [],
+                size: '60%',
+                dataLabels: {
+                    formatter: function () {
+                        return this.point.name ;
+                    },
+                    color: 'white',
+                    distance: -30
+                }
+            },{
+                name: 'Versions',
+                data: [],
+                size: '80%',
+                innerSize: '60%',
+                dataLabels: {
+                    formatter: function () {
+                        // display only if larger than 1
+                        return '<b>' + this.point.name + ':</b> ' + this.y + '%' ;
                     }
                 }
-            }
-        };
+            }];
 
         $.each(envData[plat]['os'], function(index, val) {
-            osSeries.data.push([val.name,val.count])
+            osSeries[0].data.push({
+                name: val.name,
+                y: val.count,
+                color: colors[index]
+            });
+
+            $.each(val.version,function(i, el) {
+                osSeries[1].data.push({
+                    name: el.version,
+                    y: el.count,
+                    color: colors[i]
+                });
+            });
         });
         $.each(envData[plat]['browser'], function(index, val) {
-            browserSeries.data.push([val.name,val.count])
+            browserSeries[0].data.push({
+                name: val.name,
+                y: val.count,
+                color: colors[index]
+            });
+
+            $.each(val.version, function(i, el) {
+                browserSeries[1].data.push({
+                    name: el.version,
+                    y: el.count,
+                    color: colors[i]
+                });
+            });
         });
 
-        $scope.osChartConfig.series[0] = osSeries;
+        $scope.osChartConfig.series = osSeries;
         $scope.osChartConfig.loading = false;
 
-        $scope.browserChartConfig.series[0] = browserSeries;
+        $scope.browserChartConfig.series = browserSeries;
         $scope.browserChartConfig.loading = false;
-        
-    }
-
-    envDataProvider.success(function(data){
-        setSeries( data );
-    });
-  
-});
-
-app.controller('versionController', function($scope, $location, envDataProvider,$routeParams) {
-    // create a message to display in our view
-    var plat = $routeParams['plat'],
-        os_browser = $routeParams['os_browser'],
-        name = $routeParams['name'];
-
-    $scope.title = '版本分布';
-
-    $scope.plat = plat;
-    $scope.os_browser = os_browser;
-    $scope.name = name;
-
-    $scope.platform = plat == 'mo' ? '移动端' :'PC端';
-    $scope.os_or_browser = os_browser == 'os' ? '操作系统' : '浏览器';
-
-    $('.preloader').hide();
-
-    $scope.chartConfig = angular.copy($.extend({}, pieTpl,{
-        title:{
-            text: 'ppzuche '+ $scope.platform + $scope.os_or_browser + name + '各版本占比'
-        }
-    }));
-
-    function setSeries ( envData ) {
-        if(!envData){
-            return false;
-        }
-        var series = {
-            type: 'pie',
-            name: 'version',
-            data: []
-        };
-
-        $.each(envData[plat][os_browser], function(index, val) {
-            if(val.name == name){
-                $.each(val.version, function(i, el) {
-                    series.data.push([el.version,el.count])
-                });
-                return false;
-            }
-        });
-        
-
-        $scope.chartConfig.series[0] = series;
-        $scope.chartConfig.loading = false;
         
     }
 

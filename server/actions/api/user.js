@@ -1,5 +1,3 @@
-
-
 var User = require('./../../model/user');
 var utils = require('./../../lib/utils');
 var token = require('./../../lib/token');
