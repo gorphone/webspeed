@@ -33,6 +33,34 @@ var pieTpl = {
     series: [],
     loading : true,
     useHighStocks: false
+},lineTpl = {
+    title: {
+        text: '',
+        x: -20 //center
+    },
+    xAxis: {
+        categories: []
+    },
+    yAxis: {
+        title: {
+            text: '时间 (ms)'
+        },
+        plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+        }]
+    },
+    tooltip: {
+        valueSuffix: 'ms'
+    },
+    legend: {
+        layout: 'hor',
+        align: 'center',
+        verticalAlign: 'middle',
+        borderWidth: 0
+    },
+    series: []
 };
 
 
@@ -53,6 +81,10 @@ app.config(function($routeProvider) {
             templateUrl : 'html/version.html'//,
             //controller  : 'platformController'
         })
+        .when('/pagespeed', {
+            templateUrl : 'html/pagespeed.html'//,
+            //controller  : 'platformController'
+        })
         // // route for the contact page
         // .when('/contact', {
         //     templateUrl : 'pages/contact.html',
@@ -63,6 +95,10 @@ app.config(function($routeProvider) {
 //共享数据
 app.factory('envDataProvider', function($http){
     return $http.get('/api/env');
+});
+
+app.factory('pagesDataProvider', function($http){
+    return $http.get('/api/pages');
 });
 
 
@@ -245,5 +281,81 @@ app.controller('versionController', function($scope, $location, envDataProvider,
     envDataProvider.success(function(data){
         setSeries( data );
     });
+  
+});
+
+
+
+app.controller('speedController', function($scope, $location, pagesDataProvider,$http, $filter) {
+    $('.preloader').hide();
+    
+    $scope.params = {
+        platform: 'mo',
+        page: '/signup/driver'
+    };
+
+    pagesDataProvider.success(function(data){
+        $scope.pages = data;
+        $scope.curPlatform = data[0];
+        $scope.curPagePath = $scope.curPlatform && $scope.curPlatform['paths'][0];
+    });
+
+    $scope.$watch('curPlatform', function(){
+        $scope.curPagePath = $scope.curPlatform && $scope.curPlatform['paths'][0];
+    });
+
+    $scope.$watch('curPagePath', function(newPath){
+        if($scope.curPagePath){
+            $scope.params.page = newPath;
+            $scope.params.platform = $scope.curPlatform._id;
+        }
+    });
+
+    $scope.$watch('params', function(){
+        $http.get('/api/speed', { params: $scope.params}).success(function(data){
+            setSeries(data);
+        });
+    }, true);
+
+    $scope.chartConfig =  $.extend(true, {}, lineTpl)
+
+    function setSeries ( envData ) {
+        if(!envData){
+            return false;
+        }
+
+        var categories = [],
+            series = [];
+
+
+        $.each(envData, function(index, val) {
+            categories.push( $filter('date')(new Date(val.date), 'yyyy-MM-dd') );
+
+            for( var i in val ){
+                if( !isNaN(val[i].t) ){
+                    var obj = ($.grep(series, function( s ){
+                        return s.name == i;
+                    }))[0];
+
+                    if(!obj){
+                        obj = {
+                            name: i,
+                            data : []
+                        };
+                        series.push(obj);
+                    }
+
+                    obj.data.push(val[i].t);
+                }
+            }
+        });
+
+        $scope.chartConfig.title.text = $scope.curPlatform._id + '端' + $scope.curPagePath  + '性能数据';
+        $scope.chartConfig.xAxis.categories = categories;
+        $scope.chartConfig.series = series;
+
+        console.log($scope.chartConfig);
+        
+    }
   
 });

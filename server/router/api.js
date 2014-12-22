@@ -9,10 +9,13 @@ var mwAuth = require('./../middleware/authorization');
 var mwVerify = require('./../middleware/verification');
 var user = require('./../actions/api/user');
 var list = require('./../actions/api/list');
+var speed = require('./../actions/api/speed');
 
 var router = express.Router();
 
 router.get('/env', list.env);
+router.get('/speed', speed.speed);
+router.get('/pages', speed.pages);
 
 //router.use(bodyParser());
 

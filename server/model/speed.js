@@ -1,7 +1,7 @@
 /* 
 * @Author: gaofeng
 * @Date:   2014-12-08 17:02:13
-* @Last Modified time: 2014-12-09 20:49:08
+* @Last Modified time: 2014-12-15 16:00:46
 */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
@@ -29,12 +29,34 @@ var mongoose = require('mongoose'),
     speedModel;
 
 speedSchema.statics = {
-    getByDate: function (date, callback) {
-        console.log(date);
-        var start = new Date( date + " 00:00:00" ),
-            end = new Date ( date + " 23:59:59" );
+    /**
+     * getPage
+     * @param  {Object}   options  {
+     *     
+     * }
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    getSpeedOfPage: function ( options , callback) {
+        var options = options || {},
+            cond = {};
+        cond.source = options.platform || 'mo';
+        cond.path = options.page;
 
-        this.findOne({date: { $gte: start, $lte: end}}, callback)
+        if (options.start || options.end){
+            cond.date = {};
+            options.start && ( cond.date.$gte = options.start + '0:00:00' );
+            options.start && ( cond.date.$lte = options.start + '23:59:59' );
+        }
+
+        this.find( cond , callback)
+    },
+
+    getPages : function ( callback ){
+        this.aggregate().group({
+                _id:  "$source",
+                paths: {$addToSet:"$path"} 
+            }).exec(callback);
     }
 }
 

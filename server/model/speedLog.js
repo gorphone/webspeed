@@ -1,7 +1,7 @@
 /* 
 * @Author: gaofeng
 * @Date:   2014-12-09 15:35:37
-* @Last Modified time: 2014-12-15 12:26:47
+* @Last Modified time: 2014-12-15 15:06:30
 */
 
 var mongoose = require('mongoose'),
@@ -70,8 +70,6 @@ LogSchema.statics = {
 
                 var path = this.referer.replace(/(\w+):\/\/([^\:|\/]+)(\:\d*)?([^#|\?|\n]+)?(#.*)?(\?.*)?/i, '$4');
 
-                path == '' && ( path = '/' );
-
                 path = path.split('/');
                 for (var i = 0; i < path.length; i++) {
                     if(path[i].length == 12){
@@ -79,11 +77,14 @@ LogSchema.statics = {
                     }
                 };
 
-                if(path[path.length - 1] == '/'){
+                if(path[path.length - 1] == ''){
                     path.splice(path.length - 1);
                 }
 
-                res.path = path.join('/');
+                path = path.join('/');
+
+                path == '' && ( path = '/' );
+                res.path = path;
 
                 var d = new Date(this.access_time);
 
