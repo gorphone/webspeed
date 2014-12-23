@@ -1,7 +1,7 @@
 /* 
 * @Author: gaofeng
 * @Date:   2014-12-09 15:35:37
-* @Last Modified time: 2014-12-15 15:06:30
+* @Last Modified time: 2014-12-23 11:20:00
 */
 
 var mongoose = require('mongoose'),
@@ -186,7 +186,7 @@ LogSchema.statics = {
 }
 
 
-var Model = mongoose.model('Webspeed', LogSchema, 'webspeed');
+var Model = mongoose.model('Webspeed', LogSchema, 'webback');
 module.exports = Model;
 
 console.log('init speed');

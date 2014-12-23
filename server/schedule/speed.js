@@ -21,7 +21,9 @@ mongoose.connection.on('disconnected', connect);
 
 
 
-Logs.mapSpeed(function(err, logs){
+Logs.mapSpeed({
+    path: /^\/static\/logger\/pp.gif/
+},function(err, logs){
     if(!err){
         console.log(logs.length);
         logs.forEach(function (log) {
