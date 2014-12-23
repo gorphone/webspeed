@@ -248,7 +248,7 @@ LogSchema.statics = {
 
 	            var d = new Date(this.access_time);
 
-	            res.date = [ d.getFullYear(), d.getMonth(), d.getDate() ].join('-') ;
+	            res.date = [ d.getFullYear(), d.getMonth() + 1, d.getDate() ].join('-') ;
 	            
 	            emit( [res.source,res.path, res.date].join(':'), res );
 	        },
@@ -356,7 +356,7 @@ LogSchema.statics = {
 //         prev.count ++;
 //     }
 // }});
-var Model = mongoose.model('webspeed', LogSchema);
+var Model = mongoose.model('Webspeed', LogSchema, 'webspeed');
 module.exports = Model;
 
 // Model.mapUserAgent (function(err, logs){
