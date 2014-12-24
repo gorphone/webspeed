@@ -320,7 +320,17 @@ app.controller('speedController', function($scope, $location, pagesDataProvider,
         });
     }, true);
 
-    $scope.chartConfig =  $.extend(true, {}, lineTpl, { options: {tooltip: {formatter: function(){ console.log(this); return '<b>'+ this.x + '</b><br>' + this.series.name + ':' + this.y + 'ms <br>样本量：' + this.point.count + '</p>'   } } } })
+    $scope.chartConfig =  $.extend(true, {}, lineTpl, { 
+        options: {
+            tooltip: {
+                formatter: function(){ 
+                    return '<b>'+ this.x + '</b><br>' 
+                            + this.series.name + ':' + this.y 
+                            + 'ms <br>样本量：' + this.point.count + '</p>'  ; 
+                } 
+            } 
+        } 
+    });
 
     function setSeries ( envData ) {
         if(!envData){

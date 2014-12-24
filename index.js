@@ -26,6 +26,26 @@ var Panda = express();
 var port = process.env.PORT || config.port;
 // db config
 var db = process.env.NAME == 'dev' ? config.db_env : config.db;
+// log config
+var log4js = require('log4js');
+
+log4js.configure({
+    appenders: [
+        {
+            type: 'console'
+        }, //控制台输出
+        {
+            type: 'file', //文件输出
+            filename: 'logs/envs.log', 
+            maxLogSize: 1024,
+            backups:3,
+            category: 'normal' 
+        }
+    ]
+});
+var logger = log4js.getLogger('normal');
+logger.setLevel('INFO');
+
 // Trust Nginx
 Panda.enable('trust proxy');
 // Connect to mongodb
@@ -46,12 +66,16 @@ fs.readdirSync(__dirname + '/server/model').forEach(function (file) {
   if (~file.indexOf('.js')) require(__dirname + '/server/model/' + file);
 });
 
+
 // Configure Panda
+Panda.use(log4js.connectLogger(logger, {level:log4js.levels.INFO}));
 Panda.use(cookieParser());
 Panda.use(bodyParser.urlencoded({ extended: true }));
 Panda.use(bodyParser.json());
 
 Panda.use(express.static('./client'));
+
+
 
 
 /** 

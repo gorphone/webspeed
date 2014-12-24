@@ -5,7 +5,7 @@
  */
 
 var mongoose = require('mongoose'),
-    //schedule = require('node-schedule'),
+    schedule = require('node-schedule'),
     Logs = require('../model/list.js'),
     speedModel = require('../model/speed.js');
 
@@ -19,52 +19,66 @@ connect();
 mongoose.connection.on('error', console.log);
 mongoose.connection.on('disconnected', connect);
 
-//Logs.findOne({path: /^\/static\/logger\/pp.gif/},function(err, logs){console.log(logs)});
-var start = new Date(2014,11,20);
-var end = new Date(2014,11, 24);
-Logs.mapSpeed({
-    path: /^\/static\/logger\/pp.gif/,
-    access_time: {$gte:start,$lt:end}
-},function(err, logs){
-    if(!err){
-        console.log(logs.length);
-	var length = logs.length,
-	    i = 0;
-        if(!length){
-            process.exit(0);
-            return;
-	}
-        logs.forEach(function (log) {
-            var speed = new speedModel(log.value);
-            //console.log(log);
+var rule = new schedule.RecurrenceRule();
+rule.hour = 2; //每天2点跑一次脚本
 
-           // speed._id =
-            //console.log(speed);
+var today = new Date();
+var start = new Date( today.getFullYear(), today.getMonth(), today.getDate()-1);
+var end = new Date( today.getFullYear(), today.getMonth(), today.getDate() );
 
-            speed.save(function(err){
-                if(err){
-                    console.log(err);
-                }
-                i++;
-                if(i >= length){
-                    process.exit(0);
-                }
-                //
-            });
-        });
-    }
+// log config
+var log4js = require('log4js');
+
+log4js.configure({
+    appenders: [
+        {
+            type: 'console'
+        }, //控制台输出
+        {
+            type: 'file', //文件输出
+            filename: 'logs/speed.log', 
+            maxLogSize: 1024,
+            backups:3,
+            category: 'normal' 
+        }
+    ]
 });
 
-//env.save();
+var logger = log4js.getLogger('normal');
+logger.setLevel('INFO');
 
-// var j = schedule.scheduleJob(rule, function(){
-//  Logs.mapOs(function(err, logs){
-//      // if(!err){
-//      //  env.os = logs;
-//      //  env.save();
-//      // }
-//  });
-//     console.log('Today is recognized by Rebecca Black!');
-// });
+logger.info('running speed start ');
+var j = schedule.scheduleJob(rule, function(){
+    Logs.mapSpeed({
+        access_time: {$gte:start,$lt:end}
+    },function(err, logs){
+        if(!err){
+            var length = logs.length,
+                i = 0;
+            logger.info( 'result count:' + length );
+            if(!length){
+                process.exit(0);
+                logger.error('empty result');
+                return;
+            }
+            logs.forEach(function (log) {
+                var speed = new speedModel(log.value);
+
+                speed.save(function(err){
+                    if(err){
+                        logger.error('save error', err);
+                    }
+                    i++;
+                    if(i >= length){
+                        process.exit(0);
+                        logger.info('running speed exit ');
+                    }
+                });
+            });
+        }else{
+            logger.error(err);
+        }
+    });
+});
 
 

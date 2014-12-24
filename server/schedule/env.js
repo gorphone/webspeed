@@ -22,12 +22,11 @@ mongoose.connection.on('disconnected', connect);
 
 
 var env = new envModel({
-		date : new Date,
+		date : new Date( 2014, 11, 17 ),
 	});
 
-
-console.log(env.id);
-
+var start = new Date( 2014, 11, 17);
+var end = new Date( 2014, 11, 18 );
 // var rule = new schedule.RecurrenceRule();
 // rule.second = 0; //每天12点跑一次脚本
 
@@ -71,7 +70,10 @@ function schemaValue(log){
 	}
 }
 
-Logs.mapUserAgent(function(err, logs){
+Logs.mapUserAgent({
+        access_time: {$gte:start,$lt:end},
+        user_agent : {$ne: '-'}
+    },function(err, logs){
 	if(!err){
 		logs.forEach(function (log) {
 			var v = schemaValue(log);
@@ -83,12 +85,12 @@ Logs.mapUserAgent(function(err, logs){
 			}; 
 		});
 
-		env.save();
+		env.save(function(e){
+			if(e) {
+				console.log(e);
+			}
+		});
 	}
-});
-
-env.save(function(err){
-	console.log(err);
 });
 
 // var j = schedule.scheduleJob(rule, function(){
