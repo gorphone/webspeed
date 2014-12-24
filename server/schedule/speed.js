@@ -57,7 +57,6 @@ var j = schedule.scheduleJob(rule, function(){
                 i = 0;
             logger.info( 'result count:' + length );
             if(!length){
-                process.exit(0);
                 logger.error('empty result');
                 return;
             }
@@ -70,7 +69,6 @@ var j = schedule.scheduleJob(rule, function(){
                     }
                     i++;
                     if(i >= length){
-                        process.exit(0);
                         logger.info('running speed exit ');
                     }
                 });

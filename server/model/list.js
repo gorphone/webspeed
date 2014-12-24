@@ -106,7 +106,6 @@ LogSchema.statics = {
 				values.forEach(function(value){
 					obj.count += value.count ;
 					//obj.str.push( JSON.stringify(value));
-					obj.time +=1;
 
 					//
 					// * 处理操作系统

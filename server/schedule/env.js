@@ -22,11 +22,11 @@ mongoose.connection.on('disconnected', connect);
 
 
 var env = new envModel({
-		date : new Date( 2014, 11, 17 ),
+		date : new Date( 2014, 11, 23 ),
 	});
 
-var start = new Date( 2014, 11, 17);
-var end = new Date( 2014, 11, 18 );
+var start = new Date( 2014, 11, 23);
+var end = new Date( 2014, 11, 24 );
 // var rule = new schedule.RecurrenceRule();
 // rule.second = 0; //每天12点跑一次脚本
 
@@ -74,6 +74,7 @@ Logs.mapUserAgent({
         access_time: {$gte:start,$lt:end},
         user_agent : {$ne: '-'}
     },function(err, logs){
+	console.log(logs.length);
 	if(!err){
 		logs.forEach(function (log) {
 			var v = schemaValue(log);
