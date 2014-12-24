@@ -45,10 +45,10 @@ Logs.mapSpeed({
                 if(err){
                     console.log(err);
                 }
-		i++;
+                i++;
                 if(i >= length){
-		    process.exit(0);
-		}
+                    process.exit(0);
+                }
                 //
             });
         });

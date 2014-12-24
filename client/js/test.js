@@ -353,8 +353,6 @@ app.controller('speedController', function($scope, $location, pagesDataProvider,
         $scope.chartConfig.title.text = $scope.curPlatform._id + '端' + $scope.curPagePath  + '性能数据';
         $scope.chartConfig.xAxis.categories = categories;
         $scope.chartConfig.series = series;
-
-        console.log($scope.chartConfig);
         
     }
   
