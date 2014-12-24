@@ -53,7 +53,7 @@ speedSchema.statics = {
     },
 
     getPages : function ( callback ){
-        this.aggregate().group({
+        this.aggregate().match({count:{$gt:10}}).group({
                 _id:  "$source",
                 paths: {$addToSet:"$path"} 
             }).exec(callback);
