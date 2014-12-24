@@ -51,14 +51,15 @@ var pieTpl = {
             color: '#808080'
         }]
     },
-    tooltip: {
-        valueSuffix: 'ms'
-    },
-    legend: {
-        layout: 'hor',
-        align: 'center',
-        verticalAlign: 'middle',
-        borderWidth: 0
+    options:{
+        tooltip: {
+            valueSuffix: 'ms'
+        },
+        legend: {
+            align: 'center',
+            verticalAlign: 'bottom',
+            borderWidth: 1
+        }
     },
     series: []
 };
@@ -288,6 +289,8 @@ app.controller('versionController', function($scope, $location, envDataProvider,
 
 app.controller('speedController', function($scope, $location, pagesDataProvider,$http, $filter) {
     $('.preloader').hide();
+
+    var defaultSerise = ['jsLibLoad', 'firstPaint','domReady','totalDom','totalServer','serverResponse','total'];
     
     $scope.params = {
         platform: 'mo',
@@ -317,7 +320,7 @@ app.controller('speedController', function($scope, $location, pagesDataProvider,
         });
     }, true);
 
-    $scope.chartConfig =  $.extend(true, {}, lineTpl)
+    $scope.chartConfig =  $.extend(true, {}, lineTpl, { options: {tooltip: {formatter: function(){ console.log(this); return '<b>'+ this.x + '</b><br>' + this.series.name + ':' + this.y + 'ms <br>样本量：' + this.point.count + '</p>'   } } } })
 
     function setSeries ( envData ) {
         if(!envData){
@@ -340,12 +343,13 @@ app.controller('speedController', function($scope, $location, pagesDataProvider,
                     if(!obj){
                         obj = {
                             name: i,
+                            visible: defaultSerise.indexOf(i) >= 0,
                             data : []
                         };
                         series.push(obj);
                     }
 
-                    obj.data.push(val[i].t);
+                    obj.data.push( { y:val[i].t, count: val[i].count });
                 }
             }
         });
