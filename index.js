@@ -24,12 +24,14 @@ var mwError = require('./server/middleware/error-handler');
 var Panda = express(); 
 // Set prot
 var port = process.env.PORT || config.port;
+// db config
+var db = process.env.NAME == 'dev' ? config.db_env : config.db;
 // Trust Nginx
 Panda.enable('trust proxy');
 // Connect to mongodb
 var connect = function () {
   var options = { server: { socketOptions: { keepAlive: 1 } } };
-  mongoose.connect(config.db, options);
+  mongoose.connect(db, options);
 };
 connect();
 
