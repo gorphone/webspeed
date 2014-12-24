@@ -6,7 +6,7 @@
 
 var mongoose = require('mongoose'),
     //schedule = require('node-schedule'),
-    Logs = require('../model/speedLog.js'),
+    Logs = require('../model/list.js'),
     speedModel = require('../model/speed.js');
 
 // Connect to mongodb
@@ -19,13 +19,21 @@ connect();
 mongoose.connection.on('error', console.log);
 mongoose.connection.on('disconnected', connect);
 
-
-
+//Logs.findOne({path: /^\/static\/logger\/pp.gif/},function(err, logs){console.log(logs)});
+var start = new Date(2014,11,20);
+var end = new Date(2014,11, 24);
 Logs.mapSpeed({
-    path: /^\/static\/logger\/pp.gif/
+    path: /^\/static\/logger\/pp.gif/,
+    access_time: {$gte:start,$lt:end}
 },function(err, logs){
     if(!err){
         console.log(logs.length);
+	var length = logs.length,
+	    i = 0;
+        if(!length){
+            process.exit(0);
+            return;
+	}
         logs.forEach(function (log) {
             var speed = new speedModel(log.value);
             //console.log(log);
@@ -37,6 +45,10 @@ Logs.mapSpeed({
                 if(err){
                     console.log(err);
                 }
+		i++;
+                if(i >= length){
+		    process.exit(0);
+		}
                 //
             });
         });
