@@ -20,15 +20,30 @@ mongoose.connection.on('error', console.log);
 mongoose.connection.on('disconnected', connect);
 
 
+// log config
+var log4js = require('log4js');
 
-var env = new envModel({
-		date : new Date( 2014, 11, 23 ),
-	});
+log4js.configure({
+    appenders: [
+        {
+            type: 'console'
+        }, //控制台输出
+        {
+            type: 'file', //文件输出
+            filename: 'logs/envs.log', 
+            maxLogSize: 1024,
+            backups:3,
+            category: 'normal' 
+        }
+    ]
+});
 
-var start = new Date( 2014, 11, 23);
-var end = new Date( 2014, 11, 24 );
-// var rule = new schedule.RecurrenceRule();
-// rule.second = 0; //每天12点跑一次脚本
+var logger = log4js.getLogger('normal');
+logger.setLevel('INFO');
+
+var rule = new schedule.RecurrenceRule();
+rule.hour = 2; //每天2点跑一次脚本
+
 
 function schemaValue(log){
 	var browser = [],
@@ -70,38 +85,44 @@ function schemaValue(log){
 	}
 }
 
-Logs.mapUserAgent({
+
+
+logger.info('running envs start ');
+var j = schedule.scheduleJob(rule, function(){
+	//runing task
+	var today = new Date();
+	var start = new Date( today.getFullYear(), today.getMonth(), today.getDate()-1);
+	var end = new Date( today.getFullYear(), today.getMonth(), today.getDate() );
+
+	var env = new envModel({
+		date : start,
+	});
+
+    Logs.mapUserAgent({
         access_time: {$gte:start,$lt:end},
         user_agent : {$ne: '-'}
-    },function(err, logs){
-	console.log(logs.length);
-	if(!err){
-		logs.forEach(function (log) {
-			var v = schemaValue(log);
-			console.log(log);
-			env[log._id] ={
-				os: v.os,
-				browser : v.browser,
-				count : log.value.count
-			}; 
-		});
+	},function(err, logs){
+		if(!err){
+			logger.info('map success');
+			logs.forEach(function (log) {
+				var v = schemaValue(log);
+				console.log(log);
+				env[log._id] ={
+					os: v.os,
+					browser : v.browser,
+					count : log.value.count
+				}; 
+			});
 
-		env.save(function(e){
-			if(e) {
-				console.log(e);
-			}
-		});
-	}
+			env.save(function(e){
+				if(e) {
+					logger.error(e);
+				}
+			});
+		}else{
+			logger.error(err);
+		}
+	});
 });
-
-// var j = schedule.scheduleJob(rule, function(){
-// 	Logs.mapOs(function(err, logs){
-// 		// if(!err){
-// 		// 	env.os = logs;
-// 		// 	env.save();
-// 		// }
-// 	});
-//     console.log('Today is recognized by Rebecca Black!');
-// });
 
 

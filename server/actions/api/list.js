@@ -3,7 +3,9 @@ var Env = require('../../model/env.js')
 
 module.exports = {
 	env: function(req, res) {
-		Env.getByDate ( '2014-12-05', function(err, data){
+		var d = new Date(),
+			date = [d.getFullYear(), d.getMonth()+1, d.getDate()-1].join('-'); //先默认取前一天的数据
+		Env.getByDate ( date, function(err, data){
 			//console.log(err);
 			if(!err){
 				res.json(data);

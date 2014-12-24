@@ -21,11 +21,6 @@ mongoose.connection.on('disconnected', connect);
 
 var rule = new schedule.RecurrenceRule();
 rule.hour = 2; //每天2点跑一次脚本
-
-var today = new Date();
-var start = new Date( today.getFullYear(), today.getMonth(), today.getDate()-1);
-var end = new Date( today.getFullYear(), today.getMonth(), today.getDate() );
-
 // log config
 var log4js = require('log4js');
 
@@ -47,8 +42,12 @@ log4js.configure({
 var logger = log4js.getLogger('normal');
 logger.setLevel('INFO');
 
-logger.info('running speed start ');
 var j = schedule.scheduleJob(rule, function(){
+    var today = new Date();
+    var start = new Date( today.getFullYear(), today.getMonth(), today.getDate()-1);
+    var end = new Date( today.getFullYear(), today.getMonth(), today.getDate() );
+    
+    logger.info('running speed start ');
     Logs.mapSpeed({
         access_time: {$gte:start,$lt:end}
     },function(err, logs){
