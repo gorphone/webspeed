@@ -21,6 +21,7 @@ mongoose.connection.on('disconnected', connect);
 
 var rule = new schedule.RecurrenceRule();
 rule.hour = 2; //每天2点跑一次脚本
+rule.minute = 0; //每天2点跑一次脚本
 // log config
 var log4js = require('log4js');
 

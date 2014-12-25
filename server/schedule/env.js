@@ -43,7 +43,7 @@ logger.setLevel('INFO');
 
 var rule = new schedule.RecurrenceRule();
 rule.hour = 2; //每天2点跑一次脚本
-
+rule.minute = 0;
 
 function schemaValue(log){
 	var browser = [],
