@@ -12,14 +12,14 @@
                     <div class="form-group">
                         <div class="input-group">
                             <label class="sr-only" for="exampleInputEmail2">平台</label>
-                            <div class="input-group-addon">@</div>
+                            <div class="input-group-addon">端</div>
                             <select class="form-control" ng-model="curPlatform" ng-options="page._id for page in pages"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <label class="sr-only" for="exampleInputEmail2">页面</label>
-                            <div class="input-group-addon">@</div>
+                            <div class="input-group-addon">页面</div>
                             <select class="form-control" style="max-width:360px;" ng-model="curPagePath" ng-options="path for path in curPlatform.paths"></select>
                         </div>
                     </div>

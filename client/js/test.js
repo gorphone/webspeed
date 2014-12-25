@@ -23,7 +23,7 @@ var pieTpl = {
                     enabled: true,
                     color: '#000000',
                     connectorColor: '#000000',
-                    formatter: function() {
+                    formatter: function () {
                         return '<b>'+ this.point.name +'</b>: '+ this.percentage.toFixed(2) +' % ('+ this.y +')';
                     }
                 }
@@ -66,7 +66,7 @@ var pieTpl = {
 
 
 //路由
-app.config(function($routeProvider) {
+app.config(function ($routeProvider) {
     $routeProvider
         // route for the home page
         .when('/', {
@@ -94,11 +94,11 @@ app.config(function($routeProvider) {
 });
 
 //共享数据
-app.factory('envDataProvider', function($http){
+app.factory('envDataProvider', function ($http){
     return $http.get('/api/env');
 });
 
-app.factory('pagesDataProvider', function($http){
+app.factory('pagesDataProvider', function ($http){
     return $http.get('/api/pages');
 });
 
@@ -106,16 +106,16 @@ app.factory('pagesDataProvider', function($http){
 
 
 //
-app.controller('mainController', function($scope, $http) {
+app.controller('mainController', function ($scope, $http) {
     $scope.title = '平台占比';
 });
 
-app.controller('envController', function($scope, $location, envDataProvider) {
+app.controller('envController', function ($scope, $location, envDataProvider) {
     $scope.title = '平台占比';
     $('.preloader').hide();
     $scope.chartConfig = angular.copy($.extend({}, pieTpl, {
         title:{
-            text: 'pp租车移动和pc流量占比'
+            text: 'PP租车移动和PC流量占比'
         }
     }));
 
@@ -142,14 +142,14 @@ app.controller('envController', function($scope, $location, envDataProvider) {
             }
         };
 
-        // angular.forEach(envData, function( item ){
+        // angular.forEach(envData, function ( item ){
         // });
 
         $scope.chartConfig.series[0] = series;
         $scope.chartConfig.loading = false;
     }
 
-    envDataProvider.success(function(data){
+    envDataProvider.success(function (data){
         setSeries( data );
     });
 
@@ -157,7 +157,7 @@ app.controller('envController', function($scope, $location, envDataProvider) {
 
 
 
-app.controller('platformController', function($scope, $location, envDataProvider,$routeParams) {
+app.controller('platformController', function ($scope, $location, envDataProvider,$routeParams) {
     // create a message to display in our view
     var plat = $routeParams['plat'];
 
@@ -170,13 +170,13 @@ app.controller('platformController', function($scope, $location, envDataProvider
 
     $scope.osChartConfig = angular.copy($.extend({}, pieTpl,{
         title:{
-            text: 'ppzuche'+ $scope.platform + '操作系统占比'
+            text: 'PP租车'+ $scope.platform + '操作系统占比'
         }
     }));
 
     $scope.browserChartConfig = angular.copy($.extend({},pieTpl,{
         title:{
-            text: 'ppzuche'+ $scope.platform + '浏览器占比'
+            text: 'PP租车'+ $scope.platform + '浏览器占比'
         }
     }));
 
@@ -210,10 +210,10 @@ app.controller('platformController', function($scope, $location, envDataProvider
             }
         };
 
-        $.each(envData[plat]['os'], function(index, val) {
+        $.each(envData[plat]['os'], function (index, val) {
             osSeries.data.push([val.name,val.count])
         });
-        $.each(envData[plat]['browser'], function(index, val) {
+        $.each(envData[plat]['browser'], function (index, val) {
             browserSeries.data.push([val.name,val.count])
         });
 
@@ -225,13 +225,13 @@ app.controller('platformController', function($scope, $location, envDataProvider
         
     }
 
-    envDataProvider.success(function(data){
+    envDataProvider.success(function (data){
         setSeries( data );
     });
   
 });
 
-app.controller('versionController', function($scope, $location, envDataProvider,$routeParams) {
+app.controller('versionController', function ($scope, $location, envDataProvider,$routeParams) {
     // create a message to display in our view
     var plat = $routeParams['plat'],
         os_browser = $routeParams['os_browser'],
@@ -250,7 +250,7 @@ app.controller('versionController', function($scope, $location, envDataProvider,
 
     $scope.chartConfig = angular.copy($.extend({}, pieTpl,{
         title:{
-            text: 'ppzuche '+ $scope.platform + $scope.os_or_browser + name + '各版本占比'
+            text: 'PP租车 '+ $scope.platform + $scope.os_or_browser + name + '各版本占比'
         }
     }));
 
@@ -264,9 +264,9 @@ app.controller('versionController', function($scope, $location, envDataProvider,
             data: []
         };
 
-        $.each(envData[plat][os_browser], function(index, val) {
+        $.each(envData[plat][os_browser], function (index, val) {
             if(val.name == name){
-                $.each(val.version, function(i, el) {
+                $.each(val.version, function (i, el) {
                     series.data.push([el.version,el.count])
                 });
                 return false;
@@ -279,7 +279,7 @@ app.controller('versionController', function($scope, $location, envDataProvider,
         
     }
 
-    envDataProvider.success(function(data){
+    envDataProvider.success(function (data){
         setSeries( data );
     });
   
@@ -287,7 +287,7 @@ app.controller('versionController', function($scope, $location, envDataProvider,
 
 
 
-app.controller('speedController', function($scope, $location, pagesDataProvider,$http, $filter) {
+app.controller('speedController', function ($scope, $location, pagesDataProvider,$http, $filter) {
     $('.preloader').hide();
 
     var defaultSerise = ['jsLibLoad', 'firstPaint','domReady','totalDom','totalServer','serverResponse','total'];
@@ -297,25 +297,25 @@ app.controller('speedController', function($scope, $location, pagesDataProvider,
         page: '/signup/driver'
     };
 
-    pagesDataProvider.success(function(data){
+    pagesDataProvider.success(function (data){
         $scope.pages = data;
         $scope.curPlatform = data[0];
         $scope.curPagePath = $scope.curPlatform && $scope.curPlatform['paths'][0];
     });
 
-    $scope.$watch('curPlatform', function(){
+    $scope.$watch('curPlatform', function (){
         $scope.curPagePath = $scope.curPlatform && $scope.curPlatform['paths'][0];
     });
 
-    $scope.$watch('curPagePath', function(newPath){
+    $scope.$watch('curPagePath', function (newPath){
         if($scope.curPagePath){
             $scope.params.page = newPath;
             $scope.params.platform = $scope.curPlatform._id;
         }
     });
 
-    $scope.$watch('params', function(){
-        $http.get('/api/speed', { params: $scope.params}).success(function(data){
+    $scope.$watch('params', function (){
+        $http.get('/api/speed', { params: $scope.params}).success(function (data){
             setSeries(data);
         });
     }, true);
@@ -323,7 +323,7 @@ app.controller('speedController', function($scope, $location, pagesDataProvider,
     $scope.chartConfig =  $.extend(true, {}, lineTpl, { 
         options: {
             tooltip: {
-                formatter: function(){ 
+                formatter: function (){ 
                     return '<b>'+ this.x + '</b><br>' 
                             + this.series.name + ':' + this.y 
                             + 'ms <br>样本量：' + this.point.count + '</p>'  ; 
@@ -341,12 +341,12 @@ app.controller('speedController', function($scope, $location, pagesDataProvider,
             series = [];
 
 
-        $.each(envData, function(index, val) {
+        $.each(envData, function (index, val) {
             categories.push( $filter('date')(new Date(val.date), 'yyyy-MM-dd') );
 
             for( var i in val ){
                 if( !isNaN(val[i].t) ){
-                    var obj = ($.grep(series, function( s ){
+                    var obj = ($.grep(series, function ( s ){
                         return s.name == i;
                     }))[0];
 
@@ -364,7 +364,7 @@ app.controller('speedController', function($scope, $location, pagesDataProvider,
             }
         });
 
-        $scope.chartConfig.title.text = $scope.curPlatform._id + '端' + $scope.curPagePath  + '性能数据';
+        $scope.chartConfig.title.text = $scope.curPlatform._id.toUpperCase() + '端' + $scope.curPagePath  + '性能数据';
         $scope.chartConfig.xAxis.categories = categories;
         $scope.chartConfig.series = series;
         

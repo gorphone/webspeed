@@ -26,6 +26,7 @@ var Panda = express();
 var port = process.env.PORT || config.port;
 // db config
 var db = process.env.NAME == 'dev' ? config.db_env : config.db;
+console.log(db);
 // log config
 var log4js = require('log4js');
 
