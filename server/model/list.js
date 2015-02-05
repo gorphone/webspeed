@@ -216,7 +216,7 @@ LogSchema.statics = {
 	            query = query.split('&');
 	            query.forEach(function( item ){
 	                var i = item.split('=');
-	                if( i[0] == 'source' ){
+	                if( i[0] == 'source' || i[0] == 'path' ){
 	                    res[i[0]] = i[1];
 	                    return true;
 	                }
@@ -226,24 +226,6 @@ LogSchema.statics = {
 	                    res[i[0]].count = 1;
 	                }
 	            });
-
-	            var path = this.referer.replace(/(\w+):\/\/([^\:|\/]+)(\:\d*)?([^#|\?|\n]+)?(#.*)?(\?.*)?/i, '$4');
-
-	            path = path.split('/');
-	            for (var i = 0; i < path.length; i++) {
-	                if(path[i].length == 12){
-	                    path[i] = ':carid';
-	                }
-	            };
-
-	            if(path[path.length - 1] == ''){
-	                path.splice(path.length - 1);
-	            }
-
-	            path = path.join('/');
-
-	            path == '' && ( path = '/' );
-	            res.path = path;
 
 	            var d = new Date(this.access_time);
 
